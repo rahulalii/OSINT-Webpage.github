@@ -52,7 +52,7 @@ OSINT-BIODATA/
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/OSINT-BIODATA.git
+git clone https://github.com/rahulalii/OSINT-Webpage.github.git
 ```
 
 Open the project folder and launch:
