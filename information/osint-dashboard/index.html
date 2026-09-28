@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OSINT Intelligence Workspace – A professional open-source intelligence research dashboard for lawful public-information research." />
+  <title>OSINT Intelligence Workspace</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- Sidebar overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <!-- ── App Shell ─────────────────────────────────────────── -->
+  <div id="app">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <nav id="sidebar" aria-label="Main navigation">
+      <div class="sidebar-logo">
+        <img src="assets/logo.svg" alt="OSINT Logo" width="36" height="36" />
+        <div class="sidebar-logo-text">
+          <h2>OSINT</h2>
+          <span>Intelligence Workspace</span>
+        </div>
+      </div>
+
+      <div class="sidebar-nav" role="list">
+        <div class="sidebar-section-title">Main</div>
+
+        <button class="nav-item active" data-page="dashboard" role="listitem" aria-current="page">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Dashboard</span>
+          <span class="nav-badge" id="badge-cases">7</span>
+        </button>
+
+        <button class="nav-item" data-page="people" role="listitem">
+          <span class="nav-icon">👤</span>
+          <span class="nav-label">People</span>
+        </button>
+
+        <button class="nav-item" data-page="username" role="listitem">
+          <span class="nav-icon">🔎</span>
+          <span class="nav-label">Username Search</span>
+        </button>
+
+        <button class="nav-item" data-page="profiles" role="listitem">
+          <span class="nav-icon">📱</span>
+          <span class="nav-label">Public Profiles</span>
+        </button>
+
+        <div class="sidebar-section-title">Research</div>
+
+        <button class="nav-item" data-page="domains" role="listitem">
+          <span class="nav-icon">🌐</span>
+          <span class="nav-label">Domains</span>
+        </button>
+
+        <button class="nav-item" data-page="contacts" role="listitem">
+          <span class="nav-icon">📧</span>
+          <span class="nav-label">Public Contact Info</span>
+        </button>
+
+        <button class="nav-item" data-page="news" role="listitem">
+          <span class="nav-icon">📰</span>
+          <span class="nav-label">News &amp; Records</span>
+        </button>
+
+        <button class="nav-item" data-page="geography" role="listitem">
+          <span class="nav-icon">🗺️</span>
+          <span class="nav-label">Geography</span>
+        </button>
+
+        <button class="nav-item" data-page="media" role="listitem">
+          <span class="nav-icon">🖼️</span>
+          <span class="nav-label">Media</span>
+        </button>
+
+        <div class="sidebar-section-title">Analysis</div>
+
+        <button class="nav-item" data-page="relationships" role="listitem">
+          <span class="nav-icon">🕸️</span>
+          <span class="nav-label">Relationships</span>
+        </button>
+
+        <button class="nav-item" data-page="timeline" role="listitem">
+          <span class="nav-icon">⏱️</span>
+          <span class="nav-label">Timeline</span>
+        </button>
+
+        <button class="nav-item" data-page="sources" role="listitem">
+          <span class="nav-icon">📚</span>
+          <span class="nav-label">Sources</span>
+        </button>
+
+        <div class="sidebar-section-title">Management</div>
+
+        <button class="nav-item" data-page="cases" role="listitem">
+          <span class="nav-icon">📁</span>
+          <span class="nav-label">Cases</span>
+        </button>
+
+        <button class="nav-item" data-page="notes" role="listitem">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Notes</span>
+        </button>
+
+        <button class="nav-item" data-page="reports" role="listitem">
+          <span class="nav-icon">📄</span>
+          <span class="nav-label">Reports</span>
+        </button>
+
+        <button class="nav-item" data-page="settings" role="listitem">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">Settings</span>
+        </button>
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-toggle-btn" id="sidebarToggle" aria-label="Collapse sidebar">
+          <span id="sidebarToggleIcon">◀</span>
+          <span class="nav-label" style="font-size:.75rem;">Collapse</span>
+        </button>
+      </div>
+    </nav><!-- /.sidebar -->
+
+    <!-- ═══ HEADER ═══ -->
+    <header id="header" role="banner">
+      <button class="header-hamburger" id="hamburgerBtn" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+
+      <div class="header-search" role="search">
+        <span class="header-search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="globalSearch"
+          placeholder="Search people, domains, notes, cases…"
+          autocomplete="off"
+          aria-label="Global search"
+        />
+        <div class="search-results-dropdown" id="searchDropdown" role="listbox" aria-label="Search results"></div>
+      </div>
+
+      <div class="header-actions">
+        <button class="header-btn" id="themeToggle" title="Toggle Light/Dark Theme" aria-label="Toggle theme">🌙</button>
+        <button class="header-btn" title="Notifications" aria-label="Notifications">
+          🔔
+          <span class="dot" aria-hidden="true"></span>
+        </button>
+        <button class="header-btn" title="Export Data" aria-label="Export data" onclick="App.exportAllJSON()">💾</button>
+        <div class="header-user" tabindex="0" role="button" aria-label="Investigator profile">
+          <div class="header-avatar" aria-hidden="true">SH</div>
+          <span class="header-username">Investigator</span>
+        </div>
+      </div>
+    </header><!-- /.header -->
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main id="main" role="main">
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Dashboard
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page active" id="page-dashboard" aria-labelledby="dash-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="dash-title">🏠 OSINT Intelligence Workspace</h1>
+            <p class="page-subtitle">Overview of all active investigations and research cases</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewCase')">➕ New Investigation</button>
+            <button class="btn btn-secondary" onclick="App.navigate('reports')">📄 Generate Report</button>
+          </div>
+        </div>
+
+        <!-- Ethics Banner -->
+        <div class="ethics-banner" role="note">
+          <span class="ethics-icon">🛡️</span>
+          <div>
+            <strong>Responsible OSINT:</strong> This workspace is for lawful research using publicly available information only.
+            Respect privacy, terms of service, copyright, and applicable laws. Do not use this tool for harassment, stalking,
+            credential collection, unauthorized access, or surveillance.
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stat-grid" id="dashStats">
+          <div class="stat-card">
+            <div class="stat-icon">📁</div>
+            <div class="stat-value" id="stat-cases">7</div>
+            <div class="stat-label">Total Cases</div>
+            <div class="stat-change up">▲ 2 this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔍</div>
+            <div class="stat-value" id="stat-active">3</div>
+            <div class="stat-label">Active Cases</div>
+            <div class="stat-change up">▲ 1 this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👤</div>
+            <div class="stat-value" id="stat-people">12</div>
+            <div class="stat-label">Profiles Researched</div>
+            <div class="stat-change up">▲ 3 new</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📚</div>
+            <div class="stat-value" id="stat-sources">48</div>
+            <div class="stat-label">Public Sources</div>
+            <div class="stat-change up">▲ 8 added</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <div class="stat-value" id="stat-notes">23</div>
+            <div class="stat-label">Notes</div>
+            <div class="stat-change up">▲ 5 new</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🖼️</div>
+            <div class="stat-value" id="stat-evidence">31</div>
+            <div class="stat-label">Evidence Items</div>
+            <div class="stat-change up">▲ 6 added</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div>
+            <!-- Recent Investigations -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <div class="card-title">📋 Recent Investigations</div>
+                <button class="btn btn-sm btn-secondary" onclick="App.navigate('cases')">View All</button>
+              </div>
+              <div class="table-wrapper">
+                <table id="recentCasesTable">
+                  <thead>
+                    <tr>
+                      <th>Case ID</th>
+                      <th>Subject</th>
+                      <th>Category</th>
+                      <th>Sources</th>
+                      <th>Status</th>
+                      <th>Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentCasesBody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+              <div class="card-title mb-3">⚡ Quick Actions</div>
+              <div class="flex flex-wrap gap-2">
+                <button class="btn btn-outline" onclick="App.navigate('people')">👤 Add Person</button>
+                <button class="btn btn-outline" onclick="App.navigate('username')">🔎 Check Username</button>
+                <button class="btn btn-outline" onclick="App.navigate('domains')">🌐 Research Domain</button>
+                <button class="btn btn-outline" onclick="App.navigate('notes')">📝 Add Note</button>
+                <button class="btn btn-outline" onclick="App.navigate('timeline')">⏱️ Add Event</button>
+                <button class="btn btn-outline" onclick="App.navigate('sources')">📚 Add Source</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity Feed -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">📡 Activity Feed</div>
+              <div class="pulse-dot" title="Live"></div>
+            </div>
+            <div id="activityFeed"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: People / Individual Profile
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-people" aria-labelledby="people-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="people-title">👤 Individual Intelligence Profiles</h1>
+            <p class="page-subtitle">Public information research on individuals</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewPerson')">➕ Add Profile</button>
+          </div>
+        </div>
+
+        <div class="ethics-banner" role="note">
+          <span class="ethics-icon">🛡️</span>
+          <span>Only record <strong>publicly available</strong> information. Do not record private addresses, government IDs, passwords, or financial credentials.</span>
+        </div>
+
+        <!-- Person List + Detail View -->
+        <div style="display:grid;grid-template-columns:300px 1fr;gap:1.25rem;" id="peopleLayout">
+          <!-- People list -->
+          <div class="card" style="height:fit-content;">
+            <div class="card-header">
+              <div class="card-title">People</div>
+            </div>
+            <div class="form-group" style="margin-bottom:.75rem;">
+              <input class="form-control" type="search" id="peopleSearch" placeholder="Search profiles…" aria-label="Search people" />
+            </div>
+            <div id="peopleList"></div>
+          </div>
+
+          <!-- Person detail -->
+          <div id="personDetail">
+            <div class="empty-state">
+              <span class="empty-state-icon">👤</span>
+              <p class="empty-state-text">Select a profile from the list or add a new one</p>
+              <button class="btn btn-primary" onclick="App.openModal('modalNewPerson')">➕ Add Profile</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Responsive: stack on mobile -->
+        <style>
+          @media (max-width: 768px) {
+            #peopleLayout { grid-template-columns: 1fr !important; }
+          }
+        </style>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Username Investigation
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-username" aria-labelledby="username-title">
+        <div class="page-header">
+          <h1 class="page-title" id="username-title">🔎 Username Investigation</h1>
+        </div>
+
+        <div class="ethics-banner" role="note">
+          <span class="ethics-icon">⚠️</span>
+          <span>This tool generates <strong>demo mock results only</strong>. It does not perform live platform queries or access private accounts. For actual investigation, manually verify each URL.</span>
+        </div>
+
+        <div class="username-search-box">
+          <div class="form-group" style="flex:1;margin:0;">
+            <label class="form-label" for="usernameInput">Username to Investigate</label>
+            <input class="form-control" id="usernameInput" placeholder="e.g. john_doe_123" autocomplete="off" aria-label="Enter username" />
+          </div>
+          <button class="btn btn-primary btn-lg" onclick="App.searchUsername()" style="align-self:flex-end;">🔍 Check Platforms</button>
+          <button class="btn btn-secondary" onclick="App.clearUsernameResults()" style="align-self:flex-end;">✕ Clear</button>
+        </div>
+
+        <div class="section-title">Platform Results</div>
+        <div class="platform-result-grid" id="usernameResultGrid">
+          <div class="empty-state">
+            <span class="empty-state-icon">🔎</span>
+            <p class="empty-state-text">Enter a username above and click Check Platforms</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Public Social Profiles
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-profiles" aria-labelledby="profiles-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="profiles-title">📱 Public Social Profiles</h1>
+            <p class="page-subtitle">Catalogue of publicly available social media profiles</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewProfile')">➕ Add Profile</button>
+          </div>
+        </div>
+        <div class="social-grid" id="socialProfileGrid"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Domains
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-domains" aria-labelledby="domains-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="domains-title">🌐 Domain &amp; Website Intelligence</h1>
+            <p class="page-subtitle">Research and catalogue public domain/website information</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewDomain')">➕ Add Domain</button>
+          </div>
+        </div>
+        <div id="domainsList">
+          <div class="empty-state">
+            <span class="empty-state-icon">🌐</span>
+            <p class="empty-state-text">No domains recorded yet</p>
+            <button class="btn btn-primary" onclick="App.openModal('modalNewDomain')">➕ Add Domain</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Public Contact Info
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-contacts" aria-labelledby="contacts-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="contacts-title">📧 Public Contact Intelligence</h1>
+            <p class="page-subtitle">Publicly exposed contact information from open sources</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewContact')">➕ Add Contact</button>
+          </div>
+        </div>
+
+        <div class="warning-banner" role="alert">
+          ⚠️ <strong>Only record publicly exposed information.</strong> Do not collect private credentials or non-public data.
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Email / Contact</th>
+                <th>Domain</th>
+                <th>Source Type</th>
+                <th>Source URL</th>
+                <th>First Seen</th>
+                <th>Verified</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contactsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: News & Public Records
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-news" aria-labelledby="news-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="news-title">📰 News &amp; Public Records</h1>
+            <p class="page-subtitle">Articles, press releases, and public records</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewNews')">➕ Add Article</button>
+            <button class="btn btn-secondary" id="newsViewToggle" onclick="App.toggleNewsView()">📅 Timeline View</button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div id="newsTableView">
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Publication</th>
+                  <th>Date</th>
+                  <th>Author</th>
+                  <th>Relevance</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="newsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Timeline View -->
+        <div id="newsTimelineView" class="hidden">
+          <div class="timeline" id="newsTimeline"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Geography
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-geography" aria-labelledby="geo-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="geo-title">🗺️ Geographic Research</h1>
+            <p class="page-subtitle">Public geographic and location intelligence</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewGeo')">➕ Add Location</button>
+          </div>
+        </div>
+
+        <div class="warning-banner" role="alert">
+          🚫 Do not attempt to track real-time locations. This tool is for recording <strong>publicly disclosed</strong> geographic information only.
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:1.25rem;">
+          <div>
+            <div class="table-wrapper mb-4">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Label</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>Type</th>
+                    <th>Map URL</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="geoTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="map-placeholder" role="img" aria-label="Map placeholder">
+            <div class="map-placeholder-icon">🗺️</div>
+            <div class="map-placeholder-text">
+              <strong>Map Integration Placeholder</strong><br/>
+              This area requires an external API (e.g. OpenStreetMap).<br/>
+              Use the Map URL field to open locations directly.
+            </div>
+          </div>
+        </div>
+        <style>
+          @media (max-width: 768px) {
+            #page-geography .dashboard-grid,
+            #page-geography div[style*="grid-template-columns:1fr 320px"] { 
+              display: flex; flex-direction: column; 
+            }
+          }
+        </style>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Media
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-media" aria-labelledby="media-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="media-title">🖼️ Image &amp; Media Analysis</h1>
+            <p class="page-subtitle">Record and analyse publicly available media</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewMedia')">➕ Add Media</button>
+          </div>
+        </div>
+
+        <div class="warning-banner" role="alert">
+          🚫 Do not add media obtained through unauthorized access to private accounts or systems.
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem;" id="mediaGrid">
+          <div class="empty-state">
+            <span class="empty-state-icon">🖼️</span>
+            <p class="empty-state-text">No media items yet</p>
+            <button class="btn btn-primary" onclick="App.openModal('modalNewMedia')">➕ Add Media</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Relationships
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-relationships" aria-labelledby="rel-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="rel-title">🕸️ Relationship Map</h1>
+            <p class="page-subtitle">Visual link analysis of entities and connections</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewNode')">➕ Add Node</button>
+            <button class="btn btn-secondary" onclick="App.addRelationshipEdge()">🔗 Add Connection</button>
+            <button class="btn btn-secondary" onclick="App.resetRelationshipMap()">↺ Reset Layout</button>
+          </div>
+        </div>
+
+        <div id="relationship-canvas-wrapper">
+          <!-- SVG for edges -->
+          <svg id="relationship-svg" aria-hidden="true"></svg>
+          <!-- Nodes rendered as absolute divs -->
+          <div id="map-nodes-container"></div>
+          <!-- Toolbar -->
+          <div class="map-toolbar">
+            <button class="btn btn-sm btn-secondary" onclick="App.zoomMap(1.2)" title="Zoom In">+</button>
+            <button class="btn btn-sm btn-secondary" onclick="App.zoomMap(0.8)" title="Zoom Out">−</button>
+            <button class="btn btn-sm btn-secondary" onclick="App.fitMap()" title="Fit">⊞</button>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="card mt-4">
+          <div class="card-title mb-3">Legend</div>
+          <div class="flex flex-wrap gap-3" style="font-size:.8rem;">
+            <span>👤 Person</span>
+            <span>🏢 Organization</span>
+            <span>🌐 Website</span>
+            <span>📁 Project</span>
+            <span>📱 Profile</span>
+            <span>📅 Event</span>
+          </div>
+          <div class="divider"></div>
+          <div id="relationshipsList" class="flex flex-wrap gap-2"></div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Timeline
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-timeline" aria-labelledby="timeline-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="timeline-title">⏱️ Investigation Timeline</h1>
+            <p class="page-subtitle">Chronological record of events and discoveries</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.openModal('modalNewTimelineEvent')">➕ Add Event</button>
+          </div>
+        </div>
+        <div class="timeline" id="mainTimeline"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Sources / Evidence
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-sources" aria-labelledby="sources-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="sources-title">📚 Sources &amp; Evidence</h1>
+            <p class="page-subtitle">Manage and catalogue your research evidence</p>
+          </div>
+          <div class="page-actions">
+            <input class="form-control" id="sourcesSearch" placeholder="Search sources…" style="width:200px;" aria-label="Search sources" />
+            <button class="btn btn-primary" onclick="App.openModal('modalNewSource')">➕ Add Source</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.25rem;" id="sourcesGrid"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Cases
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-cases" aria-labelledby="cases-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="cases-title">📁 Investigation Cases</h1>
+            <p class="page-subtitle">Manage all investigation cases</p>
+          </div>
+          <div class="page-actions">
+            <select class="form-control" id="casesFilter" style="width:160px;" aria-label="Filter by status" onchange="App.renderCases()">
+              <option value="">All Statuses</option>
+              <option value="Open">Open</option>
+              <option value="Researching">Researching</option>
+              <option value="Waiting">Waiting</option>
+              <option value="Completed">Completed</option>
+              <option value="Archived">Archived</option>
+            </select>
+            <button class="btn btn-primary" onclick="App.openModal('modalNewCase')">➕ New Case</button>
+          </div>
+        </div>
+        <div id="casesGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.25rem;"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Notes
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-notes" aria-labelledby="notes-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="notes-title">📝 Notes</h1>
+            <p class="page-subtitle">Research notes and observations</p>
+          </div>
+          <div class="page-actions">
+            <input class="form-control" id="notesSearch" placeholder="Search notes…" style="width:200px;" aria-label="Search notes" oninput="App.renderNotes()" />
+            <button class="btn btn-primary" onclick="App.openModal('modalNewNote')">➕ New Note</button>
+          </div>
+        </div>
+        <div class="notes-grid" id="notesGrid"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Reports
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-reports" aria-labelledby="reports-title">
+        <div class="page-header">
+          <div>
+            <h1 class="page-title" id="reports-title">📄 OSINT Research Report</h1>
+            <p class="page-subtitle">Generate structured intelligence reports</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" onclick="App.generateReport()">⚙️ Generate Report</button>
+            <button class="btn btn-secondary" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="App.exportAllJSON()">📦 Export JSON</button>
+            <button class="btn btn-secondary" onclick="App.exportTXT()">📄 Export TXT</button>
+          </div>
+        </div>
+
+        <div class="card" id="reportOutput">
+          <div class="empty-state">
+            <span class="empty-state-icon">📄</span>
+            <p class="empty-state-text">Click "Generate Report" to build a structured report from all recorded data</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════
+           PAGE: Settings
+           ═══════════════════════════════════════════════════════ -->
+      <section class="page" id="page-settings" aria-labelledby="settings-title">
+        <div class="page-header">
+          <h1 class="page-title" id="settings-title">⚙️ Settings</h1>
+        </div>
+
+        <div style="max-width:600px;">
+          <div class="card mb-4">
+            <div class="settings-section">
+              <div class="settings-section-title">Appearance</div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Dark / Light Theme</div>
+                  <div class="setting-desc">Toggle between dark cybersecurity and light themes</div>
+                </div>
+                <button class="toggle active" id="themeToggleSetting" onclick="App.toggleTheme()" aria-label="Toggle theme" role="switch" aria-checked="true"></button>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Sidebar Collapsed</div>
+                  <div class="setting-desc">Show only icons in the sidebar</div>
+                </div>
+                <button class="toggle" id="sidebarToggleSetting" onclick="App.toggleSidebar()" aria-label="Toggle sidebar" role="switch" aria-checked="false"></button>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Compact View</div>
+                  <div class="setting-desc">Reduce card padding and spacing</div>
+                </div>
+                <button class="toggle" id="compactToggle" onclick="App.toggleCompact()" aria-label="Toggle compact view" role="switch" aria-checked="false"></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-4">
+            <div class="settings-section">
+              <div class="settings-section-title">Data Management</div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Export All Data (JSON)</div>
+                  <div class="setting-desc">Download all workspace data as JSON</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="App.exportAllJSON()">💾 Export</button>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Import Data (JSON)</div>
+                  <div class="setting-desc">Restore from a previously exported JSON file</div>
+                </div>
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                  📂 Import
+                  <input type="file" accept=".json" id="importFile" style="display:none;" onchange="App.importJSON(event)" />
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Clear All Data</div>
+                  <div class="setting-desc">Delete all workspace data (cannot be undone)</div>
+                </div>
+                <button class="btn btn-danger btn-sm" onclick="App.clearAllData()">🗑️ Clear</button>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-label">Load Demo Data</div>
+                  <div class="setting-desc">Populate the workspace with fictional demo records</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="App.loadDemoData(true)">🔄 Load Demo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="settings-section">
+              <div class="settings-section-title">About</div>
+              <div class="report-field">
+                <span class="report-field-label">Version</span>
+                <span class="report-field-value">1.0.0</span>
+              </div>
+              <div class="report-field">
+                <span class="report-field-label">Storage</span>
+                <span class="report-field-value">Browser localStorage</span>
+              </div>
+              <div class="report-field">
+                <span class="report-field-label">Backend</span>
+                <span class="report-field-value">None — 100% local</span>
+              </div>
+              <div class="report-field">
+                <span class="report-field-label">Framework</span>
+                <span class="report-field-value">Vanilla HTML/CSS/JS</span>
+              </div>
+            </div>
+
+            <div class="ethics-banner mt-4" role="note" style="margin-bottom:0;">
+              <span class="ethics-icon">🛡️</span>
+              <div>
+                <strong>Responsible OSINT Statement:</strong><br/>
+                Use this dashboard only for lawful research using publicly available information. Respect privacy, terms of service,
+                copyright, and applicable laws. Do not use this tool for harassment, stalking, credential collection,
+                unauthorized access, or surveillance.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main><!-- /#main -->
+  </div><!-- /#app -->
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div id="toast-container" role="status" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ═══ MODALS ═══ -->
+
+  <!-- New Case Modal -->
+  <dialog class="modal" id="modalNewCase" aria-labelledby="modalNewCaseTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewCaseTitle">📁 Create New Investigation</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewCase')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewCase" onsubmit="App.saveCase(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="case-name">Case Name <span class="required">*</span></label>
+          <input class="form-control" id="case-name" placeholder="Operation Alpha…" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="case-subject">Subject</label>
+          <input class="form-control" id="case-subject" placeholder="Primary target/subject" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="case-category">Category</label>
+          <select class="form-control" id="case-category">
+            <option>Person Investigation</option>
+            <option>Organization Research</option>
+            <option>Domain Intelligence</option>
+            <option>Social Media Analysis</option>
+            <option>Public Records Search</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="case-priority">Priority</label>
+          <select class="form-control" id="case-priority">
+            <option>Low</option>
+            <option selected>Medium</option>
+            <option>High</option>
+            <option>Critical</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="case-description">Description</label>
+        <textarea class="form-control" id="case-description" placeholder="Describe the purpose and scope of this investigation…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="case-notes">Investigator Notes</label>
+        <textarea class="form-control" id="case-notes" placeholder="Internal notes…" style="min-height:60px;"></textarea>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewCase')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewCase').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Create Case</button>
+    </div>
+  </dialog>
+
+  <!-- New Person Modal -->
+  <dialog class="modal" id="modalNewPerson" aria-labelledby="modalNewPersonTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewPersonTitle">👤 Add Individual Profile</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewPerson')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewPerson" onsubmit="App.savePerson(event)" style="max-height:60vh;overflow-y:auto;">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-name">Full Name <span class="required">*</span></label>
+          <input class="form-control" id="p-name" placeholder="John Smith" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-alias">Known Alias / Nickname</label>
+          <input class="form-control" id="p-alias" placeholder="Johnny" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-username">Username (Public)</label>
+          <input class="form-control" id="p-username" placeholder="johnsmith_official" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-photo">Profile Photo URL</label>
+          <input class="form-control" id="p-photo" placeholder="https://example.com/photo.jpg" type="url" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-dob">Date of Birth (if public)</label>
+          <input class="form-control" id="p-dob" type="date" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-nationality">Nationality (if publicly disclosed)</label>
+          <input class="form-control" id="p-nationality" placeholder="American" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-country">Country</label>
+          <input class="form-control" id="p-country" placeholder="USA" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-city">City</label>
+          <input class="form-control" id="p-city" placeholder="New York" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-occupation">Occupation</label>
+          <input class="form-control" id="p-occupation" placeholder="Software Engineer" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-org">Organization / Company</label>
+          <input class="form-control" id="p-org" placeholder="Acme Corp" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="p-website">Website</label>
+        <input class="form-control" id="p-website" placeholder="https://johnsmith.dev" type="url" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="p-bio">Public Bio</label>
+        <textarea class="form-control" id="p-bio" placeholder="Publicly available biography…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="p-languages">Languages</label>
+        <input class="form-control" id="p-languages" placeholder="English, Spanish" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="p-notes">Research Notes</label>
+        <textarea class="form-control" id="p-notes" placeholder="Internal research notes…" style="min-height:60px;"></textarea>
+      </div>
+      <input type="hidden" id="p-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewPerson')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewPerson').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Profile</button>
+    </div>
+  </dialog>
+
+  <!-- New Social Profile Modal -->
+  <dialog class="modal" id="modalNewProfile" aria-labelledby="modalNewProfileTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewProfileTitle">📱 Add Social Profile</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewProfile')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewProfile" onsubmit="App.saveSocialProfile(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="sp-platform">Platform <span class="required">*</span></label>
+          <select class="form-control" id="sp-platform" required>
+            <option value="">Select…</option>
+            <option>YouTube</option>
+            <option>Instagram</option>
+            <option>Facebook</option>
+            <option>X / Twitter</option>
+            <option>LinkedIn</option>
+            <option>GitHub</option>
+            <option>Reddit</option>
+            <option>TikTok</option>
+            <option>Personal Website</option>
+            <option>Blog</option>
+            <option>Telegram</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sp-username">Username <span class="required">*</span></label>
+          <input class="form-control" id="sp-username" placeholder="@username" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="sp-url">Profile URL</label>
+        <input class="form-control" id="sp-url" type="url" placeholder="https://platform.com/user" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="sp-displayname">Display Name</label>
+          <input class="form-control" id="sp-displayname" placeholder="John Smith" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sp-type">Account Type</label>
+          <select class="form-control" id="sp-type">
+            <option>Personal</option>
+            <option>Business</option>
+            <option>Organization</option>
+            <option>Public Figure</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="sp-verified">Verification Status</label>
+          <select class="form-control" id="sp-verified">
+            <option>Unknown</option>
+            <option>Verified ✓</option>
+            <option>Unverified</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="sp-person">Related Person</label>
+          <input class="form-control" id="sp-person" placeholder="Alex Morgan" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="sp-bio">Public Bio</label>
+        <textarea class="form-control" id="sp-bio" placeholder="Account's public bio…" style="min-height:60px;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="sp-notes">Notes</label>
+        <textarea class="form-control" id="sp-notes" placeholder="Research notes…" style="min-height:50px;"></textarea>
+      </div>
+      <input type="hidden" id="sp-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewProfile')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewProfile').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Profile</button>
+    </div>
+  </dialog>
+
+  <!-- New Domain Modal -->
+  <dialog class="modal" id="modalNewDomain" aria-labelledby="modalNewDomainTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewDomainTitle">🌐 Add Domain / Website</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewDomain')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewDomain" onsubmit="App.saveDomain(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="d-domain">Domain Name <span class="required">*</span></label>
+          <input class="form-control" id="d-domain" placeholder="example.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="d-title">Website Title</label>
+          <input class="form-control" id="d-title" placeholder="Example Corp" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-url">Website URL</label>
+        <input class="form-control" id="d-url" type="url" placeholder="https://example.com" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="d-org">Organization</label>
+          <input class="form-control" id="d-org" placeholder="Example Corp" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="d-status">Website Status</label>
+          <select class="form-control" id="d-status">
+            <option>Active</option>
+            <option>Inactive</option>
+            <option>Parked</option>
+            <option>Unknown</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="d-ssl">SSL Status</label>
+          <select class="form-control" id="d-ssl">
+            <option>Valid HTTPS</option>
+            <option>HTTP Only</option>
+            <option>Expired</option>
+            <option>Unknown</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="d-registrar">Registrar (Public)</label>
+          <input class="form-control" id="d-registrar" placeholder="GoDaddy, Namecheap…" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-email">Public Email</label>
+        <input class="form-control" id="d-email" placeholder="contact@example.com" type="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-tech">Technologies</label>
+        <input class="form-control" id="d-tech" placeholder="WordPress, Cloudflare, React…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-hosting">Hosting Provider</label>
+        <input class="form-control" id="d-hosting" placeholder="AWS, Vercel…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="d-notes">Research Notes</label>
+        <textarea class="form-control" id="d-notes" placeholder="DNS notes, observations…" style="min-height:70px;"></textarea>
+      </div>
+      <input type="hidden" id="d-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewDomain')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewDomain').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Domain</button>
+    </div>
+  </dialog>
+
+  <!-- New Contact Modal -->
+  <dialog class="modal" id="modalNewContact" aria-labelledby="modalNewContactTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewContactTitle">📧 Add Public Contact Info</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewContact')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewContact" onsubmit="App.saveContact(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="c-email">Public Email / Contact <span class="required">*</span></label>
+          <input class="form-control" id="c-email" placeholder="contact@example.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="c-domain">Domain</label>
+          <input class="form-control" id="c-domain" placeholder="example.com" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="c-sourcetype">Source Type</label>
+          <select class="form-control" id="c-sourcetype">
+            <option>Company Website</option>
+            <option>Public Documentation</option>
+            <option>GitHub Repository</option>
+            <option>Public Profile</option>
+            <option>Press Release</option>
+            <option>Public Directory</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="c-verified">Verification Status</label>
+          <select class="form-control" id="c-verified">
+            <option>Unverified</option>
+            <option>Verified</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="c-sourceurl">Source URL</label>
+        <input class="form-control" id="c-sourceurl" type="url" placeholder="https://example.com/contact" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="c-notes">Notes</label>
+        <textarea class="form-control" id="c-notes" placeholder="Observations…" style="min-height:60px;"></textarea>
+      </div>
+      <input type="hidden" id="c-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewContact')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewContact').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save</button>
+    </div>
+  </dialog>
+
+  <!-- New News Modal -->
+  <dialog class="modal" id="modalNewNews" aria-labelledby="modalNewNewsTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewNewsTitle">📰 Add Article / Record</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewNews')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewNews" onsubmit="App.saveNews(event)">
+      <div class="form-group">
+        <label class="form-label" for="n-title">Article Title <span class="required">*</span></label>
+        <input class="form-control" id="n-title" placeholder="Breaking: …" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="n-publication">Publication</label>
+          <input class="form-control" id="n-publication" placeholder="TechCrunch, Reuters…" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="n-date">Date</label>
+          <input class="form-control" id="n-date" type="date" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="n-author">Author</label>
+          <input class="form-control" id="n-author" placeholder="Jane Doe" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="n-relevance">Relevance</label>
+          <select class="form-control" id="n-relevance">
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="n-url">Article URL</label>
+        <input class="form-control" id="n-url" type="url" placeholder="https://…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="n-summary">Summary</label>
+        <textarea class="form-control" id="n-summary" placeholder="Brief summary of the article…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="n-notes">Notes</label>
+        <textarea class="form-control" id="n-notes" placeholder="Researcher observations…" style="min-height:50px;"></textarea>
+      </div>
+      <input type="hidden" id="n-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewNews')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewNews').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save</button>
+    </div>
+  </dialog>
+
+  <!-- New Geo Modal -->
+  <dialog class="modal" id="modalNewGeo" aria-labelledby="modalNewGeoTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewGeoTitle">🗺️ Add Location</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewGeo')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewGeo" onsubmit="App.saveGeo(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="g-label">Label <span class="required">*</span></label>
+          <input class="form-control" id="g-label" placeholder="Nova Tech HQ" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="g-type">Location Type</label>
+          <select class="form-control" id="g-type">
+            <option>Business Location</option>
+            <option>Public Organization</option>
+            <option>Public Event</option>
+            <option>Other Public</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="g-country">Country</label>
+          <input class="form-control" id="g-country" placeholder="USA" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="g-state">State / Region</label>
+          <input class="form-control" id="g-state" placeholder="California" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="g-city">City</label>
+        <input class="form-control" id="g-city" placeholder="San Francisco" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="g-mapurl">Map URL</label>
+        <input class="form-control" id="g-mapurl" type="url" placeholder="https://maps.google.com/…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="g-notes">Notes</label>
+        <textarea class="form-control" id="g-notes" placeholder="Public source, context…" style="min-height:60px;"></textarea>
+      </div>
+      <input type="hidden" id="g-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewGeo')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewGeo').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Location</button>
+    </div>
+  </dialog>
+
+  <!-- New Media Modal -->
+  <dialog class="modal" id="modalNewMedia" aria-labelledby="modalNewMediaTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNewMediaTitle">🖼️ Add Media Item</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewMedia')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewMedia" onsubmit="App.saveMedia(event)">
+      <div class="form-group">
+        <label class="form-label" for="m-url">Image URL <span class="required">*</span></label>
+        <input class="form-control" id="m-url" type="url" placeholder="https://example.com/image.jpg" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="m-filename">Filename</label>
+          <input class="form-control" id="m-filename" placeholder="screenshot.jpg" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="m-filetype">File Type</label>
+          <select class="form-control" id="m-filetype">
+            <option>JPEG</option>
+            <option>PNG</option>
+            <option>GIF</option>
+            <option>WebP</option>
+            <option>PDF</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="m-platform">Platform</label>
+          <input class="form-control" id="m-platform" placeholder="Twitter, Website…" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="m-published">Date Published</label>
+          <input class="form-control" id="m-published" type="date" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="m-source">Source URL</label>
+        <input class="form-control" id="m-source" type="url" placeholder="https://…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="m-desc">Description</label>
+        <textarea class="form-control" id="m-desc" placeholder="What does this image show?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="m-author">Author / Credit</label>
+        <input class="form-control" id="m-author" placeholder="Photographer / Account name" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="m-notes">Notes</label>
+        <textarea class="form-control" id="m-notes" placeholder="Metadata observations, relevance…" style="min-height:50px;"></textarea>
+      </div>
+      <input type="hidden" id="m-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewMedia')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewMedia').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Media</button>
+    </div>
+  </dialog>
+
+  <!-- New Timeline Event Modal -->
+  <dialog class="modal" id="modalNewTimelineEvent" aria-labelledby="modalTimelineTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTimelineTitle">⏱️ Add Timeline Event</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewTimelineEvent')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewTimelineEvent" onsubmit="App.saveTimelineEvent(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="te-date">Date <span class="required">*</span></label>
+          <input class="form-control" id="te-date" type="date" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="te-event">Event Title <span class="required">*</span></label>
+          <input class="form-control" id="te-event" placeholder="Public Profile Found" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="te-source">Source</label>
+        <input class="form-control" id="te-source" placeholder="LinkedIn, Company Website…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="te-desc">Description</label>
+        <textarea class="form-control" id="te-desc" placeholder="Describe what was discovered or recorded…"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="te-notes">Notes</label>
+        <textarea class="form-control" id="te-notes" placeholder="Observations…" style="min-height:50px;"></textarea>
+      </div>
+      <input type="hidden" id="te-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewTimelineEvent')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewTimelineEvent').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Add Event</button>
+    </div>
+  </dialog>
+
+  <!-- New Source Modal -->
+  <dialog class="modal" id="modalNewSource" aria-labelledby="modalSourceTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalSourceTitle">📚 Add Source / Evidence</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewSource')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewSource" onsubmit="App.saveSource(event)">
+      <div class="form-group">
+        <label class="form-label" for="s-title">Title <span class="required">*</span></label>
+        <input class="form-control" id="s-title" placeholder="Evidence title…" required />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="s-type">Source Type</label>
+          <select class="form-control" id="s-type">
+            <option>Website</option>
+            <option>Social Media</option>
+            <option>News Article</option>
+            <option>Public Document</option>
+            <option>Image</option>
+            <option>Video</option>
+            <option>GitHub</option>
+            <option>Public API</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s-reliability">Reliability</label>
+          <select class="form-control" id="s-reliability">
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+            <option>Unverified</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="s-url">Source URL</label>
+        <input class="form-control" id="s-url" type="url" placeholder="https://…" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="s-desc">Description</label>
+        <textarea class="form-control" id="s-desc" placeholder="What does this source contain?"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="s-person">Related Person</label>
+          <input class="form-control" id="s-person" placeholder="Alex Morgan" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s-case">Related Case</label>
+          <input class="form-control" id="s-case" placeholder="Case ID or name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="s-tags">Tags (comma-separated)</label>
+        <input class="form-control" id="s-tags" placeholder="social, profile, tech…" />
+      </div>
+      <input type="hidden" id="s-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewSource')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewSource').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Source</button>
+    </div>
+  </dialog>
+
+  <!-- New Note Modal -->
+  <dialog class="modal" id="modalNewNote" aria-labelledby="modalNoteTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNoteTitle">📝 Add Note</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewNote')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewNote" onsubmit="App.saveNote(event)">
+      <div class="form-group">
+        <label class="form-label" for="note-title">Title <span class="required">*</span></label>
+        <input class="form-control" id="note-title" placeholder="Note title…" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="note-body">Note Content</label>
+        <textarea class="form-control" id="note-body" placeholder="Write your research note here…" style="min-height:120px;"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="note-case">Related Case</label>
+          <input class="form-control" id="note-case" placeholder="Case ID or name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="note-person">Related Person</label>
+          <input class="form-control" id="note-person" placeholder="Alex Morgan" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="note-tags">Tags (comma-separated)</label>
+        <input class="form-control" id="note-tags" placeholder="osint, profile, social…" />
+      </div>
+      <input type="hidden" id="note-edit-id" value="" />
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewNote')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewNote').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">💾 Save Note</button>
+    </div>
+  </dialog>
+
+  <!-- New Map Node Modal -->
+  <dialog class="modal" id="modalNewNode" aria-labelledby="modalNodeTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalNodeTitle">🕸️ Add Relationship Node</div>
+      <button class="modal-close" onclick="App.closeModal('modalNewNode')" aria-label="Close">✕</button>
+    </div>
+    <form class="modal-body" id="formNewNode" onsubmit="App.saveMapNode(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="node-label">Label <span class="required">*</span></label>
+          <input class="form-control" id="node-label" placeholder="Alex Morgan" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="node-type">Type</label>
+          <select class="form-control" id="node-type">
+            <option value="person">👤 Person</option>
+            <option value="org">🏢 Organization</option>
+            <option value="website">🌐 Website</option>
+            <option value="project">📁 Project</option>
+            <option value="profile">📱 Profile</option>
+            <option value="event">📅 Event</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalNewNode')">Cancel</button>
+      <button class="btn btn-primary" onclick="document.getElementById('formNewNode').dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))">➕ Add Node</button>
+    </div>
+  </dialog>
+
+  <!-- Confirm Dialog -->
+  <dialog class="modal" id="modalConfirm" aria-labelledby="modalConfirmTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="modalConfirmTitle">⚠️ Confirm Action</div>
+      <button class="modal-close" onclick="App.closeModal('modalConfirm')" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="confirmMessage" style="font-size:.9rem;line-height:1.6;"></p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="App.closeModal('modalConfirm')">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
